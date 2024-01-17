@@ -1,5 +1,5 @@
 
 module.exports = {
-    B_ROUNDS: process.env.B_ROUNDS || 8,
+    BC_ROUNDS: process.env.BC_ROUNDS || 8,
     JWT_SECRET: process.env.JWT_SECRET || 'shh'
 }

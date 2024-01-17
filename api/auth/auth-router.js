@@ -2,7 +2,11 @@ const router = require("express").Router();
 const db = require("../../data/dbConfig");
 const bcrypt = require("bcryptjs");
 const JWT = require("jsonwebtoken");
-const { B_ROUNDS, JWT_SECRET } = require("../../config");
+const {
+  checkSubmission,
+  checkUsernameAvailability,
+} = require("./auth-middleware");
+const { BC_ROUNDS, JWT_SECRET } = require("../../config");
 
 function generateToken(user) {
   const payload = {
@@ -15,22 +19,26 @@ function generateToken(user) {
   return JWT.sign(payload, JWT_SECRET, options);
 }
 
-router.post("/register", async (req, res, next) => {
-  try {
-    const { username, password } = req.body;
-    const newUser = {
-      username: username,
-      password: await bcrypt.hash(password, B_ROUNDS),
-    };
-    const newId = await db("users").insert(newUser);
-    const [user] = await db("users").where("id", newId);
+router.post(
+  "/register",
+  checkSubmission,
+  checkUsernameAvailability,
+  async (req, res, next) => {
+    try {
+      const { username, password } = req.body;
+      const newUser = {
+        username: username,
+        password: await bcrypt.hash(password, BC_ROUNDS),
+      };
+      const newId = await db("users").insert(newUser);
+      const [user] = await db("users").where("id", newId);
 
-    res.status(201).json(user);
-  } catch (err) {
-    next(err);
-  }
+      res.status(201).json(user);
+    } catch (err) {
+      next(err);
+    }
 
-  /*
+    /*
     IMPLEMENT
     You are welcome to build additional middlewares to help with the endpoint's functionality.
     DO NOT EXCEED 2^8 ROUNDS OF HASHING!
@@ -55,10 +63,28 @@ router.post("/register", async (req, res, next) => {
     4- On FAILED registration due to the `username` being taken,
       the response body should include a string exactly as follows: "username taken".
   */
-});
+  }
+);
+router.post("/login", checkSubmission, async (req, res, next) => {
+  try {
+    let { username, password } = req.body;
+    const newU = await db('users')
+      .where('username', username)
+      .first();
 
-router.post("/login", (req, res) => {
-  res.end("implement login, please!");
+    if (newU && bcrypt.compareSync(password, newU.password)) {
+      const token = generateToken(newU);
+
+      res.status(200).json({
+        message: `Welcome ${newU.username}!, have a token...`,
+        token,
+      });
+    } else {
+      res.status(401).json({ message: 'Invalid Credentials' });
+    }
+  } catch (err) {
+    next(err);
+  }
   /*
     IMPLEMENT
     You are welcome to build additional middlewares to help with the endpoint's functionality.
