@@ -13,21 +13,7 @@ beforeEach(async () => {
 
 
 
-describe('[GET] /jokes', () => {
-  const newUser = { username: "user", password: "1234" }
-  it('receives an error with no token present', async () => {
-    await request(server).post('/api/auth/register').send(newUser)
-    await request(server).post('/api/auth/login').send(newUser)
-    const data = await request(server).get('/api/jokes')
-    expect(data.body.message).toBe('Token required')
-  })
-  it('returns a list of jokes while authorized', async () => {
-    await request(server).post('/api/auth/register').send(newUser)
-    const res = await request(server).post('/api/auth/login').send(newUser)
-    const data = await request(server).get('/api/jokes').set('Authorization', `${res.body.token}`)
-    expect(data.body).toHaveLength(3)
-  })
-})
+
 
 describe('[POST] /auth/register', () => {
   const newUser = { username: "Cat", password: "Dogsaregross" }
@@ -55,5 +41,20 @@ describe('[POST] /auth/login', () => {
     await request(server).post('/api/auth/register').send(newUser)
     const res = await request(server).post('/api/auth/login').send({ username: newUser.username, password: '1'})
     expect(res.body.message).toBe('invalid credentials')
+  })
+})
+describe('[GET] /jokes', () => {
+  const newUser = { username: "user", password: "1234" }
+  it('receives an error with no token present', async () => {
+    await request(server).post('/api/auth/register').send(newUser)
+    await request(server).post('/api/auth/login').send(newUser)
+    const data = await request(server).get('/api/jokes')
+    expect(data.body.message).toBe('Token required')
+  })
+  it('returns a list of jokes while authorized', async () => {
+    await request(server).post('/api/auth/register').send(newUser)
+    const res = await request(server).post('/api/auth/login').send(newUser)
+    const data = await request(server).get('/api/jokes').set('Authorization', `${res.body.token}`)
+    expect(data.body).toHaveLength(3)
   })
 })
