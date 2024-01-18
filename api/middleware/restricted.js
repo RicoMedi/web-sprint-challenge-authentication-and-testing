@@ -4,13 +4,13 @@ const { JT_SECRET } = require("../../config");
 
 module.exports = (req, res, next) => {
  const token= req.headers.authorization
- console.log(token)
+ 
  if(!token){
   return next({status:401, message: 'token invalid'})
  }
  jwt.verify(token, JT_SECRET, (err, decodedToken)=>{
   if(err){
-    next({status:401, message: 'token invalid'})
+    next({status:401, message: 'invalid token'})
   }else{
       req.decodedToken = decodedToken
       next()
