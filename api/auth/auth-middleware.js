@@ -8,6 +8,7 @@ const checkSubmission = async (req, res, next) => {
     } else {
      res.status(400).json({message: "username and password required"});
     }
+    next()
   } catch (err) {
     next(err);
   }
