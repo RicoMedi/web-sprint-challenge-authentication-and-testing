@@ -26,7 +26,7 @@ describe("[POST] /auth/register", () => {
 });
 
 describe("[POST] /auth/login", () => {
-  const newUser = { username: "user", password: "1234" };
+  const newUser = { username: "dogs", password: "catssuck" };
   it("new user sends back a token", async () => {
     await request(server).post("/api/auth/register").send(newUser);
     const res = await request(server).post("/api/auth/login").send(newUser);
@@ -41,7 +41,7 @@ describe("[POST] /auth/login", () => {
   });
 });
 describe("[GET] /jokes while authenticated", () => {
-  const newUser = { username: "user", password: "1234" };
+  const newUser = { username: "cows", password: "arecute" };
   it("receives an error with no token present", async () => {
     await request(server).post("/api/auth/register").send(newUser);
     await request(server).post("/api/auth/login").send(newUser);
