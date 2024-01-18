@@ -6,11 +6,11 @@ module.exports = (req, res, next) => {
  const token= req.headers.authorization
  console.log(token)
  if(!token){
-  return next({status:401, message: 'Token required'})
+  return next({status:401, message: 'token invalid'})
  }
  jwt.verify(token, JT_SECRET, (err, decodedToken)=>{
   if(err){
-    next({status:401, message: 'Token required'})
+    next({status:401, message: 'token invalid'})
   }else{
       req.decodedToken = decodedToken
       next()
