@@ -6,7 +6,7 @@ const checkSubmission = async (req, res, next) => {
     if (username|| password) {
       next();
     } else {
-      next({status: 400, message: "username and password required"});
+     res.status(400).json({message: "username and password required"});
     }
   } catch (err) {
     next(err);
