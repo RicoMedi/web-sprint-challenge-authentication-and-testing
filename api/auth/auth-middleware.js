@@ -3,12 +3,11 @@ const db = require("../../data/dbConfig");
 const checkSubmission = async (req, res, next) => {
   try {
     const { username, password } = req.body;
-    if (username|| password) {
-      next();
+    if (username.length === 0 || password.length === 0) {
+      next({ status: 400, message: "username and password required" });
     } else {
-     res.status(400).json({message: "username and password required"});
+      next();
     }
-    next()
   } catch (err) {
     next(err);
   }
@@ -17,7 +16,7 @@ const checkSubmission = async (req, res, next) => {
 const checkUsernameAvailability = async (req, res, next) => {
   try {
     const { username } = req.body;
-    const user = await db("users")
+    const user = await db("user")
       .where("username", username)
       .select("username")
       .first();
