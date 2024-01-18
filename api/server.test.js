@@ -46,7 +46,7 @@ describe("[GET] /jokes while authenticated", () => {
     await request(server).post("/api/auth/register").send(newUser);
     await request(server).post("/api/auth/login").send(newUser);
     const data = await request(server).get("/api/jokes");
-    expect(data.body.message).toBe("Token required");
+    expect(data.body.message).toBe("token invalid");
   });
   it("returns a list of jokes while authorized", async () => {
     await request(server).post("/api/auth/register").send(newUser);
