@@ -62,7 +62,7 @@ console.log(token)
         
       });
     } else {
-      res.status(401).json({ message: 'invalid credentials' });
+      res.status(401).json({ message: 'username and password required' });
     }
   } catch (err) {
     next(err);

@@ -37,7 +37,7 @@ describe("[POST] /auth/login", () => {
     const res = await request(server)
       .post("/api/auth/login")
       .send({ username: newUser.username, password: "1" });
-    expect(res.body.message).toBe("invalid credentials");
+    expect(res.body.message).toBe("username and password required");
   });
 });
 describe("[GET] /jokes while authenticated", () => {
