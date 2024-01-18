@@ -16,7 +16,7 @@ const checkSubmission = async (req, res, next) => {
 const checkUsernameAvailability = async (req, res, next) => {
   try {
     const { username } = req.body;
-    const user = await db("user")
+    const user = await db("users")
       .where("username", username)
       .select("username")
       .first();

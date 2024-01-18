@@ -65,7 +65,7 @@ router.post(
   */
   }
 );
-router.post("/login", checkSubmission, async (req, res, next) => {
+router.post("/login", async (req, res, next) => {
   try {
     let { username, password } = req.body;
     const newU = await db('users')
