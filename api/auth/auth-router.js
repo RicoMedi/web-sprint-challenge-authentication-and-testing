@@ -6,7 +6,7 @@ const {
   checkSubmission,
   checkUsernameAvailability,
 } = require("./auth-middleware");
-const { BC_ROUNDS, JWT_SECRET } = require("../../config");
+const { BC_ROUNDS, JT_SECRET } = require("../../config");
 
 function generateToken(user) {
   const payload = {
@@ -14,9 +14,9 @@ function generateToken(user) {
     username: user.username,
   };
   const options = {
-    expiresIn: "2d",
+    expiresIn: "1d",
   };
-  return JWT.sign(payload, JWT_SECRET, options);
+  return JWT.sign(payload, JT_SECRET, options);
 }
 
 router.post(
@@ -74,13 +74,14 @@ router.post("/login", checkSubmission, async (req, res, next) => {
 
     if (newU && bcrypt.compareSync(password, newU.password)) {
       const token = generateToken(newU);
-
+console.log(token)
       res.status(200).json({
         message: `Welcome ${newU.username}!, have a token...`,
         token,
+        
       });
     } else {
-      res.status(401).json({ message: 'Invalid Credentials' });
+      res.status(401).json({ message: 'invalid credentials' });
     }
   } catch (err) {
     next(err);
